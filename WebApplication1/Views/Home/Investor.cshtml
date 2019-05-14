@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Issuer";
+}
+<h1>Issuer</h1>
+<hr />
+
+
+<div class="row">
+    <div class="col-md-6">
+    </div>
+
+</div>
+<br />
+<br />
+@*<div class="row">
+    <table id="tblUsers" class="table table-hover table-striped table-responsive">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Account Address</td>
+        </tr>
+        <tbody id="tbodyusers"></tbody>
+    </table>
+    <table id="tblNodes"class="table table-hover table-striped table-responsive">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>URI</td>
+            <td>Key</td>
+        </tr>
+        <tbody id="tbodynodes"></tbody>
+    </table>
+</div>*@
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+           
+            $("#btnNodes").click(function () {
+
+                     $.ajax
+                    ({
+                        url: "http://localhost:54325/api/DeployContract",
+                        type: 'POST',
+                        dataType: 'json', // added data type
+                        success: function (res)
+                        {
+                            
+                            
+                        }
+                    });
+
+
+            });
+        });
+    </script>
+}

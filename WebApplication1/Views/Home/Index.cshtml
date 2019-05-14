@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "Bond-Issuer";
+}
+<br />
+<br />
+
+<div class="row">
+
+    <div class="col-md-6">
+        <input type="button" value="Accounts" class="btn btn-success" id="btnAdmin" />
+        <input type="button" value="Nodes" class="btn btn-success" id="btnNodes" />
+        <input type="button" value="Deploy" class="btn btn-success" id="btnDeploy" />
+        <label style="font:bold" id="lblStatus"></label>
+    </div>
+
+</div>
+<br />
+<br />
+<div class="row">
+    <table id="tblUsers" class="table table-hover table-striped table-responsive">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Account Address</td>
+        </tr>
+        <tbody id="tbodyusers"></tbody>
+    </table>
+    <table id="tblNodes"class="table table-hover table-striped table-responsive">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>URI</td>
+            <td>Key</td>
+        </tr>
+        <tbody id="tbodynodes"></tbody>
+    </table>
+</div>
+<div>
+    <img id="loadingDiv" src="~/Content/ajax-loader.gif" />
+</div>
+@section scripts
+{
+    <script>
+        var $loading = $('#loadingDiv').hide();
+        $(document).ready(function () {
+
+            $("#tblUsers").hide();
+
+            $("#tblNodes").hide();
+            $("#btnAdmin").click(function () {
+                $("#tblUsers").show();
+                $("#tblNodes").hide();
+
+
+                $.ajax
+                    ({
+                        url: "http://localhost:54325/QuorumUsers",
+                        type: 'GET',
+                        dataType: 'json', // added data type
+                        success: function (res) {
+                            $("#tbodyusers").empty();
+                            $.each(res, (function (i, val) {
+                                var row = "<tr>" + "<td>" + val.Id + "</td>" + "<td>" + val.Name + "</td>" + "<td>" + val.AccountAddress + "</td>" + "</tr>";
+                                $("#tbodyusers").append(row);
+
+                            }))
+
+                        }
+                    });
+
+
+            });
+
+            $("#btnNodes").click(function () {
+                $("#tblNodes").show();
+                $("#tblUsers").hide();
+
+                $.ajax
+                    ({
+                        url: "http://localhost:54325/QuorumNodes",
+                        type: 'GET',
+                        dataType: 'json', // added data type
+                        success: function (res) {
+                            $("#tbodynodes").empty();
+                            
+                            $.each(res, (function (i, val) {
+                                var row = "<tr>" + "<td>" + val.Id + "</td>" + "<td>" + val.Name + "</td>" + "<td>" + val.Uri + "</td>" + "<td>" + val.ConstellationPublicKey + "</td>" + "</tr>";
+                                $("#tbodynodes").append(row);
+
+                            }))
+
+                        }
+                    });
+
+
+            });
+
+
+            $("#btnDeploy").click(function () {
+                $("#tblUsers").hide();
+
+                $("#tblNodes").hide();
+                $loading.show();
+                $.ajax
+                    ({
+                        url: "http://localhost:54325/api/DeployContract",
+                        type: 'POST',
+                        dataType: 'json', // added data type
+                        data: {},
+                        success: function (res) {
+                            
+                        },
+                        complete: function () {
+                            $loading.hide();
+                            document.getElementById('lblStatus').innerHTML = 'Deployement Done!';
+                        },
+                    });
+
+
+            });
+        });
+    </script>
+}

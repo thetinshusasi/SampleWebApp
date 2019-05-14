@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Investor";
+}
+<h1>Investor</h1>
+<hr />
+
+
+<div class="row">
+    <div class="col-md-6">
+        <input type="button" value="Accounts" class="btn btn-success" id="btnAdmin" />
+        <input type="button" value="Nodes" class="btn btn-success" id="btnNodes" />
+
+    </div>
+
+</div>
+<br />
+<br />
+<div class="row">
+    <table id="tblUsers" class="table table-hover table-striped table-responsive">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Account Address</td>
+        </tr>
+        <tbody id="tbodyusers"></tbody>
+    </table>
+    <table id="tblNodes"class="table table-hover table-striped table-responsive">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>URI</td>
+            <td>Key</td>
+        </tr>
+        <tbody id="tbodynodes"></tbody>
+    </table>
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#tblUsers").hide();
+
+            $("#tblNodes").hide();
+            $("#btnAdmin").click(function () {
+                $("#tblUsers").show();
+                $("#tblNodes").hide();
+
+
+                $.ajax
+                    ({
+                        url: "http://localhost:54325/QuorumUsers",
+                        type: 'GET',
+                        dataType: 'json', // added data type
+                        success: function (res) {
+                            $("#tbodyusers").empty();
+                            $.each(res, (function (i, val) {
+                                var row = "<tr>" + "<td>" + val.Id + "</td>" + "<td>" + val.Name + "</td>" + "<td>" + val.AccountAddress + "</td>" + "</tr>";
+                                $("#tbodyusers").append(row);
+
+                            }))
+
+                        }
+                    });
+
+
+            });
+
+            $("#btnNodes").click(function () {
+                $("#tblNodes").show();
+                $("#tblUsers").hide();
+
+                $.ajax
+                    ({
+                        url: "http://localhost:54325/QuorumNodes",
+                        type: 'GET',
+                        dataType: 'json', // added data type
+                        success: function (res) {
+                            $("#tbodynodes").empty();
+                            
+                            $.each(res, (function (i, val) {
+                                var row = "<tr>" + "<td>" + val.Id + "</td>" + "<td>" + val.Name + "</td>" + "<td>" + val.Uri + "</td>" + "<td>" + val.ConstellationPublicKey + "</td>" + "</tr>";
+                                $("#tbodynodes").append(row);
+
+                            }))
+
+                        }
+                    });
+
+
+            });
+        });
+    </script>
+}
